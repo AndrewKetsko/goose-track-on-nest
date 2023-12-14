@@ -1,3 +1,53 @@
+// import { Schema } from 'mongoose';
+
+// export const UserSchema = new Schema(
+//   {
+//     userName: {
+//       type: String,
+//       required: [true, 'UserName is required'],
+//     },
+
+//     email: {
+//       type: String,
+//       match:
+//         /^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/,
+//       required: [true, 'Email is required'],
+//       unique: true,
+//     },
+
+//     password: {
+//       type: String,
+//       required: [true, 'Set password for user'],
+//     },
+//     phone: {
+//       type: String,
+//       match: [/^(?:\+\d|[\d\s\-./()]){10,20}$/, 'Invalid phone number format.'],
+//       default: '',
+//     },
+//     skype: {
+//       type: String,
+//       default: '',
+//     },
+//     birthDay: { type: String, default: '' },
+
+//     token: { type: String, default: null },
+
+//     avatarURL: { type: String, default: '' },
+
+//     verify: {
+//       type: Boolean,
+//       default: false,
+//     },
+//     verificationToken: {
+//       type: String,
+//       required: [true, 'Verify token is required'],
+//     },
+//   },
+//   { versionKey: false, timestamps: true },
+// );
+
+//------------------------------------------
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 

@@ -1,3 +1,56 @@
+// import { Schema } from 'mongoose';
+
+// export const TaskShema = new Schema(
+//   {
+//     title: {
+//       type: String,
+//       required: [true, 'Task title is required'],
+//       max: 250,
+//     },
+//     start: {
+//       type: String,
+//       required: [true, 'Start time is required'],
+//       match: [/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, 'Start time do not match'],
+//     },
+//     end: {
+//       type: String,
+//       required: [true, 'End time is required'],
+//       match: [/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/, 'End time do not match'],
+//       validate: {
+//         validator: function (v) {
+//           return v >= this.start;
+//         },
+//         message: 'Start time must be lower then end time',
+//       },
+//     },
+//     priority: {
+//       type: String,
+//       required: [true, 'Priority is required'],
+//       enum: ['LOW', 'MEDIUM', 'HIGH'],
+//     },
+//     date: {
+//       type: String,
+//       required: [true, 'Date is required'],
+//       match: [
+//         /^20\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])/,
+//         'Date do not match',
+//       ],
+//     },
+//     category: {
+//       type: String,
+//       required: [true, 'Category is required'],
+//       enum: ['TODO', 'INPROGRESS', 'DONE'],
+//     },
+//     owner: {
+//       type: Schema.Types.ObjectId,
+//       ref: 'user',
+//     },
+//   },
+//   { versionKey: false },
+// );
+
+//------------------------------------------
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from '../../auth/schemas/user.schema';
 import mongoose from 'mongoose';

@@ -1,0 +1,31 @@
+### register user
+
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "userName":"someName",
+    "email":"somemail@mail.com",
+    "password":"somePassword"
+}
+
+### bad request upon register user/missing some fields
+
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "email":"somemail@mail.com",
+    "password":"somePassword"
+}
+
+### bad request upon register user/email in use
+
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "userName":"someName",
+    "email":"stepan_bandera@gmail.com",
+    "password":"somePassword"
+}

@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Review } from './schemas/review.schema';
-import { Model } from 'mongoose';
+import { Review, ReviewsRepository } from './reviews.repository';
 
 @Injectable()
 export class ReviewsService {
-  constructor(@InjectModel(Review.name) private userModel: Model<Review>) {}
+  constructor(private reviewsRepository: ReviewsRepository) {}
 
   getAllReviews(): Promise<Review[]> {
-    return this.userModel.find().populate('owner', 'userName avatarURL -_id');
+    return this.reviewsRepository.getAllReviews();
   }
 
   getOwnReview() {}

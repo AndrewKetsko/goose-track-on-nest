@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Task } from './schemas/task.schema';
-import { Model } from 'mongoose';
+import { TasksRepository } from './tasks.repository';
 
 @Injectable()
 export class TasksService {
-  constructor(@InjectModel(Task.name) private userModel: Model<Task>) {}
+  constructor(private tasksRepository: TasksRepository) {}
 
   getOwnTasks() {}
 
