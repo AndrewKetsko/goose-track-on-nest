@@ -30,7 +30,7 @@ Content-Type: application/json
     "password":"somePassword"
 }
 
-### sign in user
+### log in user
 
 POST http://localhost:5000/auth/login
 Content-Type: application/json
@@ -40,7 +40,7 @@ Content-Type: application/json
     "password":"somePassword"
 }
 
-### sign in user error/wrong data
+### log in user error/wrong data
 
 POST http://localhost:5000/auth/login
 Content-Type: application/json
@@ -49,3 +49,12 @@ Content-Type: application/json
     "email":"stepan_bandera@gmail.com",
     "password":"somePassword"
 }
+
+### logout user
+POST http://localhost:5000/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbWVtYWlsQG1haWwuY29tIiwiaWQiOiI2NTdjM2VhNDNhNDZiYzRjYmEzMjY3ZWYiLCJpYXQiOjE3MDI2NDEzMTYsImV4cCI6MTcwMjcyNzcxNn0.34-C_68BhmG5pveq--baKkkOJRn3u1THnh918Jd_16I
+
+### test
+POST http://localhost:5000/auth/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbWVtYWlsQG1haWwuY29tIiwiaWQiOiI2NTdjM2VhNDNhNDZiYzRjYmEzMjY3ZWYiLCJpYXQiOjE3MDI2NDEzMTYsImV4cCI6MTcwMjcyNzcxNn0.34-C_68BhmG5pveq--baKkkOJRn3u1THnh918Jd_16I
+

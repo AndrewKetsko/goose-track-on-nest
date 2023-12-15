@@ -10,6 +10,7 @@ import { EmailService } from './email.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload-interface';
 import { LoginUserDto } from './dtos/login-user.dto';
+import { Types } from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -85,5 +86,10 @@ export class AuthService {
     user._id = undefined;
 
     return { status: 200, message: 'success', user, token };
+  }
+
+  async logOutUser(id: Types.ObjectId) {
+    await this.authRepository.updateUserToken(id, '');
+    return { status: 204, message: 'no content' };
   }
 }
