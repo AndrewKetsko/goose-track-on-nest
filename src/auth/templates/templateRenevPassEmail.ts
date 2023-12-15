@@ -1,4 +1,8 @@
-export const templateRegistrationEmail = (userName) => {
+export const templateRenewPassEmail = (
+  confirmationLink: string,
+  userName: string,
+  password: string,
+): string => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html
     xmlns="http://www.w3.org/1999/xhtml"
@@ -720,7 +724,7 @@ export const templateRegistrationEmail = (userName) => {
                                     "
                                   >
                                     <strong
-                                      >SLAVA UKRAINI!!!<br />Email Registration Confirmation</strong
+                                      >SLAVA UKRAINI!!!<br />Change Password</strong
                                     >
                                   </h1>
                                 </td>
@@ -865,6 +869,36 @@ export const templateRegistrationEmail = (userName) => {
                                         ><strong>${userName}</strong></span
                                       >
                                     </p>
+                                    <p
+                                    style="
+                                      font-size: 14px;
+                                      line-height: 190%;
+                                      text-align: center;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        font-size: 22px;
+                                        line-height: 41.8px;
+                                      "
+                                      ><strong>Your Password</strong></span
+                                    >
+                                  </p>
+                                  <p
+                                  style="
+                                    font-size: 14px;
+                                    line-height: 190%;
+                                    text-align: center;
+                                  "
+                                >
+                                  <span
+                                    style="
+                                      font-size: 22px;
+                                      line-height: 41.8px;
+                                    "
+                                    ><strong>${password}</strong></span
+                                  >
+                                </p>
                                   </div>
                                 </td>
                               </tr>
@@ -902,20 +936,21 @@ export const templateRegistrationEmail = (userName) => {
                                     <p style="font-size: 14px; line-height: 200%">
                                       Dear,
                                     </p>
-                                    <p style="font-size: 14px; line-height: 200%">
-                                    We are pleased to inform you that your registration on our website has been successfully completed. Welcome to the Goose Track community!
+                                    <p style="font-size: 14px; line-height: 200%">We are sending you this email because we have received a request to change the password for your account on our website.
 
-                                    To start using our services and explore all the possibilities that Goose Track offers, you can log in to your account using your registered email address and password.
+
+                                    Your password has been successfully changed. 
+
                                     
-                                    If you have any questions or need assistance, please don't hesitate to contact our support team. We're here to help you!
                                     
-                                    Thank you for choosing Goose Track. We look forward to providing you with an excellent experience.
+                                    To log in to the site, please click the button below:
+                              
                                     
-                                    Best regards,
-                                    The Goose Track Team
+                                   
                                     </p>
                                     <p style="font-size: 14px; line-height: 200%">
-                                    To access the main website, please click the button below:
+                                    If you did not initiate this password change process, please ensure the security of your account and update your password. Best regards, The Goose
+                                      Track Team
                                     </p>
                                   </div>
                                 </td>
@@ -953,7 +988,7 @@ export const templateRegistrationEmail = (userName) => {
                                   <div align="center">
                                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://unlayer.com" style="height:60px; v-text-anchor:middle; width:360px;" arcsize="5%"  stroke="f" fillcolor="#2a66f1"><w:anchorlock/><center style="color:#d6c731;"><![endif]-->
                                     <a
-                                      href="https://userandrii.github.io/goose_track_project_front"
+                                      href="${confirmationLink}"
                                       target="_blank"
                                       class="v-button v-size-width"
                                       style="

@@ -1,8 +1,7 @@
-export const templateRenewPassEmail = (
-  confirmationLink,
-  userName,
-  password,
-) => {
+export const templateVerificationEmail = (
+  confirmationLink: string,
+  userName: string,
+): string => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html
     xmlns="http://www.w3.org/1999/xhtml"
@@ -724,7 +723,8 @@ export const templateRenewPassEmail = (
                                     "
                                   >
                                     <strong
-                                      >SLAVA UKRAINI!!!<br />Change Password</strong
+                                      >SLAVA UKRAINI!!!<br />Email verification
+                                      request</strong
                                     >
                                   </h1>
                                 </td>
@@ -869,36 +869,6 @@ export const templateRenewPassEmail = (
                                         ><strong>${userName}</strong></span
                                       >
                                     </p>
-                                    <p
-                                    style="
-                                      font-size: 14px;
-                                      line-height: 190%;
-                                      text-align: center;
-                                    "
-                                  >
-                                    <span
-                                      style="
-                                        font-size: 22px;
-                                        line-height: 41.8px;
-                                      "
-                                      ><strong>Your Password</strong></span
-                                    >
-                                  </p>
-                                  <p
-                                  style="
-                                    font-size: 14px;
-                                    line-height: 190%;
-                                    text-align: center;
-                                  "
-                                >
-                                  <span
-                                    style="
-                                      font-size: 22px;
-                                      line-height: 41.8px;
-                                    "
-                                    ><strong>${password}</strong></span
-                                  >
-                                </p>
                                   </div>
                                 </td>
                               </tr>
@@ -936,20 +906,16 @@ export const templateRenewPassEmail = (
                                     <p style="font-size: 14px; line-height: 200%">
                                       Dear,
                                     </p>
-                                    <p style="font-size: 14px; line-height: 200%">We are sending you this email because we have received a request to change the password for your account on our website.
-
-
-                                    Your password has been successfully changed. 
-
-                                    
-                                    
-                                    To log in to the site, please click the button below:
-                              
-                                    
-                                   
+                                    <p style="font-size: 14px; line-height: 200%">
+                                      We are sending you this email to verify your
+                                      email address. To complete the registration
+                                      process on our website, please click the
+                                      link below:
                                     </p>
                                     <p style="font-size: 14px; line-height: 200%">
-                                    If you did not initiate this password change process, please ensure the security of your account and update your password. Best regards, The Goose
+                                      If you didn't register on our website,
+                                      please disregard this email. Thank you for
+                                      your attention. Best regards, The Goose
                                       Track Team
                                     </p>
                                   </div>

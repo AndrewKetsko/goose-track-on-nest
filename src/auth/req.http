@@ -29,3 +29,23 @@ Content-Type: application/json
     "email":"stepan_bandera@gmail.com",
     "password":"somePassword"
 }
+
+### sign in user
+
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "email":"somemail@mail.com",
+    "password":"somePassword"
+}
+
+### sign in user error/wrong data
+
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "email":"stepan_bandera@gmail.com",
+    "password":"somePassword"
+}

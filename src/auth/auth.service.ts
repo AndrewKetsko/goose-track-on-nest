@@ -1,18 +1,25 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { AuthRepository, User } from './auth.repository';
 import { v4 } from 'uuid';
 import { EmailService } from './email.service';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload-interface';
+import { LoginUserDto } from './dtos/login-user.dto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const jwt = require('jsonwebtoken');
 
 @Injectable()
 export class AuthService {
   constructor(
     private authRepository: AuthRepository,
     private emailService: EmailService,
+    private jwtService: JwtService,
   ) {}
 
   async registerUser(body: CreateUserDto) {
@@ -35,9 +42,10 @@ export class AuthService {
       password: hashPassword,
       verificationToken,
     });
-    const jwtPayload = { email, id: newUser._id };
-    const token = jwt.sign(jwtPayload, process.env.SECRET_KEY, {
-      expiresIn: '23h',
+
+    const jwtPayload: JwtPayload = { email, id: newUser._id };
+    const token = this.jwtService.sign(jwtPayload, {
+      secret: process.env.SECRET_KEY,
     });
 
     this.authRepository.updateUserToken(newUser._id, token);
@@ -45,6 +53,37 @@ export class AuthService {
     const verifyEmail = this.emailService.registrationsConfirm(email, userName);
     this.emailService.sendEmail(verifyEmail);
 
+    newUser.password = undefined;
+    newUser.token = undefined;
+    newUser._id = undefined;
+
     return { status: 201, message: 'success', user: newUser, token };
+  }
+
+  async loginUser(body: LoginUserDto) {
+    const { email, password } = body;
+    const user = await this.authRepository.findUser(email);
+    const passwordCompare = await bcrypt.compare(password, user.password);
+
+    if (!user || !passwordCompare) {
+      throw new NotFoundException('Email or password is wrong');
+    }
+
+    try {
+      this.jwtService.verify(user.token, { secret: process.env.SECRET_KEY });
+    } catch (error) {
+      const jwtPayload: JwtPayload = { email, id: user._id };
+      user.token = this.jwtService.sign(jwtPayload, {
+        secret: process.env.SECRET_KEY,
+      });
+      user.save();
+      // await this.authRepository.updateUserToken(user._id, token);
+    }
+    const token = user.token;
+    user.password = undefined;
+    user.token = undefined;
+    user._id = undefined;
+
+    return { status: 200, message: 'success', user, token };
   }
 }

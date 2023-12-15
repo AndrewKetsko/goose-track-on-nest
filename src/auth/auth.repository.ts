@@ -4,16 +4,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Document, Model, Types } from 'mongoose';
 
 export interface User extends Document {
-  readonly userName: string;
-  readonly email: string;
-  readonly password: string;
-  readonly phone: string;
-  readonly skype: string;
-  readonly birthDay: string;
-  readonly token: string;
-  readonly avatarURL: string;
-  readonly verify: boolean;
-  readonly verificationToken: string;
+  userName: string;
+  email: string;
+  password: string;
+  phone: string;
+  skype: string;
+  birthDay: string;
+  token: string;
+  avatarURL: string;
+  verify: boolean;
+  verificationToken: string;
 }
 
 @Injectable()
@@ -26,6 +26,10 @@ export class AuthRepository {
 
   findUser(email: string) {
     return this.userModel.findOne({ email });
+  }
+
+  findUserById(id: Types.ObjectId) {
+    return this.userModel.findById(id);
   }
 
   createUser(user: {

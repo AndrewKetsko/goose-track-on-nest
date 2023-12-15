@@ -1,4 +1,4 @@
-export const templateVerificationEmail = (confirmationLink, userName) => {
+export const templateRegistrationEmail = (userName: string): string => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html
     xmlns="http://www.w3.org/1999/xhtml"
@@ -720,8 +720,7 @@ export const templateVerificationEmail = (confirmationLink, userName) => {
                                     "
                                   >
                                     <strong
-                                      >SLAVA UKRAINI!!!<br />Email verification
-                                      request</strong
+                                      >SLAVA UKRAINI!!!<br />Email Registration Confirmation</strong
                                     >
                                   </h1>
                                 </td>
@@ -904,16 +903,19 @@ export const templateVerificationEmail = (confirmationLink, userName) => {
                                       Dear,
                                     </p>
                                     <p style="font-size: 14px; line-height: 200%">
-                                      We are sending you this email to verify your
-                                      email address. To complete the registration
-                                      process on our website, please click the
-                                      link below:
+                                    We are pleased to inform you that your registration on our website has been successfully completed. Welcome to the Goose Track community!
+
+                                    To start using our services and explore all the possibilities that Goose Track offers, you can log in to your account using your registered email address and password.
+                                    
+                                    If you have any questions or need assistance, please don't hesitate to contact our support team. We're here to help you!
+                                    
+                                    Thank you for choosing Goose Track. We look forward to providing you with an excellent experience.
+                                    
+                                    Best regards,
+                                    The Goose Track Team
                                     </p>
                                     <p style="font-size: 14px; line-height: 200%">
-                                      If you didn't register on our website,
-                                      please disregard this email. Thank you for
-                                      your attention. Best regards, The Goose
-                                      Track Team
+                                    To access the main website, please click the button below:
                                     </p>
                                   </div>
                                 </td>
@@ -951,7 +953,7 @@ export const templateVerificationEmail = (confirmationLink, userName) => {
                                   <div align="center">
                                     <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://unlayer.com" style="height:60px; v-text-anchor:middle; width:360px;" arcsize="5%"  stroke="f" fillcolor="#2a66f1"><w:anchorlock/><center style="color:#d6c731;"><![endif]-->
                                     <a
-                                      href="${confirmationLink}"
+                                      href="https://userandrii.github.io/goose_track_project_front"
                                       target="_blank"
                                       class="v-button v-size-width"
                                       style="
