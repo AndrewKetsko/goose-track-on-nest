@@ -2,8 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -13,6 +16,8 @@ import { GetUser } from './decorators/get-user.decorator';
 import { User } from './schemas/user.schema';
 import { Types } from 'mongoose';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -37,14 +42,17 @@ export class AuthController {
   @Get('/current')
   @UseGuards(AuthGuard)
   getCurrentUser(@GetUser() user: User) {
-    const token = user.token;
-    user.token = undefined;
-    user.password = undefined;
-    return {
-      status: 200,
-      message: 'success',
-      token,
-      user,
-    };
+    return this.authService.getCurrentUser(user);
+  }
+
+  @Patch('/user')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('avatar')) //need to check how to use CLOUDINARY in NEST!!!
+  updateUser(
+    @GetUser('_id') id: Types.ObjectId,
+    @Body() body: UpdateUserDto,
+    @UploadedFile() file: Express.Multer.File, //need to find & paste URL to avatar !!!
+  ) {
+    return this.authService.updateUser(id, body, file);
   }
 }

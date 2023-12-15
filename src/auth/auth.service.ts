@@ -4,16 +4,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { AuthRepository, User } from './auth.repository';
+import { AuthRepository } from './auth.repository';
 import { v4 } from 'uuid';
 import { EmailService } from './email.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload-interface';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { Types } from 'mongoose';
+import { User } from './schemas/user.schema';
+// import { v2 as cloudinary } from 'cloudinary';
+import { UpdateUserDto } from './dtos/update-user.dto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 
 @Injectable()
 export class AuthService {
@@ -90,5 +92,43 @@ export class AuthService {
   async logOutUser(id: Types.ObjectId) {
     await this.authRepository.updateUserToken(id, '');
     return { status: 204, message: 'no content' };
+  }
+
+  getCurrentUser(user: User) {
+    const token = user.token;
+    user.token = undefined;
+    user.password = undefined;
+    return {
+      status: 200,
+      message: 'success',
+      token,
+      user,
+    };
+  }
+
+  async updateUser(
+    id: Types.ObjectId,
+    body: UpdateUserDto,
+    file: Express.Multer.File,
+  ) {
+    const userToUpdate: Partial<User> = { ...body };
+
+    if (body.email) {
+      userToUpdate.verify = false;
+    }
+
+    if (file) {
+      userToUpdate.avatarURL = 'some path'; //need to find & paste URL to avatar !!!
+    }
+
+    const user = await this.authRepository.updateUser(id, userToUpdate);
+
+    user.token = undefined;
+    user.password = undefined;
+    return {
+      status: 200,
+      message: 'User updated successfully',
+      user,
+    };
   }
 }

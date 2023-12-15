@@ -1,20 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 // import { InjectModel } from '@nestjs/mongoose';
 // import { User } from './schemas/user.schema';
-import { Document, Model, Types } from 'mongoose';
-
-export interface User extends Document {
-  userName: string;
-  email: string;
-  password: string;
-  phone: string;
-  skype: string;
-  birthDay: string;
-  token: string;
-  avatarURL: string;
-  verify: boolean;
-  verificationToken: string;
-}
+import { Model, Types } from 'mongoose';
+import { User } from './schemas/user.schema';
 
 @Injectable()
 export class AuthRepository {
@@ -43,5 +31,9 @@ export class AuthRepository {
 
   async updateUserToken(id: Types.ObjectId, token: string) {
     await this.userModel.findByIdAndUpdate(id, { token });
+  }
+
+  async updateUser(id: Types.ObjectId, user: Partial<User>) {
+    return this.userModel.findByIdAndUpdate(id, { $set: user }, { new: true });
   }
 }
