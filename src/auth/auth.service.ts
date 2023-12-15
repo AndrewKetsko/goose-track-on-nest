@@ -56,7 +56,7 @@ export class AuthService {
 
     newUser.password = undefined;
     newUser.token = undefined;
-    newUser._id = undefined;
+    // newUser._id = undefined;
 
     return { status: 201, message: 'success', user: newUser, token };
   }
@@ -77,13 +77,12 @@ export class AuthService {
       user.token = this.jwtService.sign(jwtPayload, {
         secret: process.env.SECRET_KEY,
       });
-      user.save();
-      // await this.authRepository.updateUserToken(user._id, token);
+      await this.authRepository.updateUserToken(user._id, user.token);
     }
     const token = user.token;
     user.password = undefined;
     user.token = undefined;
-    user._id = undefined;
+    // user._id = undefined;
 
     return { status: 200, message: 'success', user, token };
   }

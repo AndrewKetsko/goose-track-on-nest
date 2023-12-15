@@ -5,6 +5,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+// import { AuthGuard } from './guards/auth.guard';
 // import { MongooseModule } from '@nestjs/mongoose';
 // import { DatabaseModule } from './database/database.module';
 

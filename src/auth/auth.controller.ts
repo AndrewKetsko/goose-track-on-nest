@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards,
   ValidationPipe,
@@ -8,10 +9,10 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dtos/login-user.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './decorators/get-user.decorator';
 import { User } from './schemas/user.schema';
 import { Types } from 'mongoose';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,14 +29,22 @@ export class AuthController {
   }
 
   @Post('/logout')
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard)
   logOutUser(@GetUser('_id') id: Types.ObjectId) {
     return this.authService.logOutUser(id);
   }
 
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@GetUser() user: User) {
-    return user;
+  @Get('/current')
+  @UseGuards(AuthGuard)
+  getCurrentUser(@GetUser() user: User) {
+    const token = user.token;
+    user.token = undefined;
+    user.password = undefined;
+    return {
+      status: 200,
+      message: 'success',
+      token,
+      user,
+    };
   }
 }

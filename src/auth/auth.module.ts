@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthRepository } from './auth.repository';
@@ -8,7 +8,7 @@ import { EmailService } from './email.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt-strategy';
-import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
+// import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
 
 @Module({
   imports: [
@@ -29,10 +29,10 @@ import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
     EmailService,
     JwtStrategy,
   ],
-  exports: [JwtStrategy, PassportModule],
+  exports: [JwtStrategy, PassportModule, AuthRepository],
 })
 export class AuthModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CurrentUserMiddleware).forRoutes('*');
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer.apply(CurrentUserMiddleware).forRoutes('*');
+  // }
 }
