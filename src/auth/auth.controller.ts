@@ -50,7 +50,7 @@ export class AuthController {
   @UseInterceptors(FileInterceptor('avatar')) //need to check how to use CLOUDINARY in NEST!!!
   updateUser(
     @GetUser('_id') id: Types.ObjectId,
-    @Body() body: UpdateUserDto,
+    @Body(ValidationPipe) body: UpdateUserDto,
     @UploadedFile() file: Express.Multer.File, //need to find & paste URL to avatar !!!
   ) {
     return this.authService.updateUser(id, body, file);
