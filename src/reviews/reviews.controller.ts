@@ -42,8 +42,8 @@ export class ReviewsController {
   @Patch('/own')
   @UseGuards(AuthGuard())
   patchOwnRewiew(
-    @GetUser('id') id: Types.ObjectId,
-    @Body() body: UpdateReviewDto,
+    @GetUser('_id') id: Types.ObjectId,
+    @Body(ValidationPipe) body: UpdateReviewDto,
   ) {
     return this.reviewsService.patchOwnRewiew(id, body);
   }

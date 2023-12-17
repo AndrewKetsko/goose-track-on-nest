@@ -6,9 +6,11 @@ import { TasksService } from './tasks.service';
 import { TasksRepository } from './tasks.repository';
 import { DatabaseModule } from 'src/database/database.module';
 import { taskProviders } from './task.providers';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     DatabaseModule,
     // MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
   ],

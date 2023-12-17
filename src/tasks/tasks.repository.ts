@@ -1,20 +1,35 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Document, Model, Types } from 'mongoose';
-
-export interface Task extends Document {
-  readonly title: string;
-  readonly start: string;
-  readonly end: string;
-  readonly priority: string;
-  readonly date: string;
-  readonly category: string;
-  readonly owner: Types.ObjectId;
-}
+import { Model, Types } from 'mongoose';
+import { Task } from './schemas/task.schema';
+import { CreateTaskDto } from './dtos/create-task.dto';
+import { UpdateTaskDto } from './dtos/update-task.dto';
 
 @Injectable()
 export class TasksRepository {
   constructor(
     @Inject('TASK_MODEL')
-    private readonly taskModel: Model<Task>,
+    private taskModel: Model<Task>,
   ) {}
+
+  findTasksByMonth(id: Types.ObjectId, month: string) {
+    return this.taskModel.find(
+      {
+        owner: id,
+        date: { $regex: month, $options: 'i' },
+      },
+      '-owner',
+    );
+  }
+
+  findTaskById(id: Types.ObjectId) {
+    return this.taskModel.findById(id);
+  }
+
+  createTask(owner: Types.ObjectId, body: CreateTaskDto) {
+    return this.taskModel.create({ owner, ...body });
+  }
+
+  updateTask(id: Types.ObjectId, body: UpdateTaskDto) {
+    return this.taskModel.findByIdAndUpdate(id, body, { new: true });
+  }
 }
