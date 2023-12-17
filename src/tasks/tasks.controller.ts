@@ -48,7 +48,10 @@ export class TasksController {
   }
 
   @Delete('/:id')
-  deleteOwnTask(@Param('id') id: Types.ObjectId) {
-    return this.tasksService.deleteOwnTask(id);
+  deleteOwnTask(
+    @GetUser('_id') userId: Types.ObjectId,
+    @Param('id') taskId: Types.ObjectId,
+  ) {
+    return this.tasksService.deleteOwnTask(userId, taskId);
   }
 }

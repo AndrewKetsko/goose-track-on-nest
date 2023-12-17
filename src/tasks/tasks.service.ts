@@ -84,7 +84,21 @@ export class TasksService {
     return { status: 200, data: updatedTask };
   }
 
-  deleteOwnTask(id: Types.ObjectId) {
-    return id;
+  async deleteOwnTask(userId: Types.ObjectId, taskId: Types.ObjectId) {
+    const task = await this.tasksRepository.findTaskById(taskId);
+
+    if (task.owner._id.toString() !== userId.toString()) {
+      throw new UnauthorizedException();
+    }
+
+    const removedTask = await this.tasksRepository.deleteTask(taskId);
+
+    if (!removedTask) {
+      throw new NotFoundException();
+    }
+
+    task.owner = undefined;
+
+    return { status: 200, data: task };
   }
 }

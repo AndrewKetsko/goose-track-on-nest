@@ -32,4 +32,8 @@ export class TasksRepository {
   updateTask(id: Types.ObjectId, body: UpdateTaskDto) {
     return this.taskModel.findByIdAndUpdate(id, body, { new: true });
   }
+
+  deleteTask(id: Types.ObjectId) {
+    return this.taskModel.findByIdAndDelete(id);
+  }
 }
