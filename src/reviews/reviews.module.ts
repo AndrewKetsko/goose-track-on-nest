@@ -6,10 +6,12 @@ import { ReviewsService } from './reviews.service';
 import { ReviewsRepository } from './reviews.repository';
 import { DatabaseModule } from 'src/database/database.module';
 import { reviewsProviders } from './reviews.providers';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     DatabaseModule,
+    AuthModule,
     // MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
   ],
   controllers: [ReviewsController],

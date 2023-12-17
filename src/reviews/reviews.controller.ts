@@ -1,5 +1,19 @@
-import { Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { Types } from 'mongoose';
+import { CreateReviewDto } from './dtos/create-review.dto';
+import { UpdateReviewDto } from './dtos/update-review.dto';
 
 @Controller('reviews')
 export class ReviewsController {
@@ -11,22 +25,32 @@ export class ReviewsController {
   }
 
   @Get('/own')
-  getOwnReview() {
-    return this.reviewsService.getOwnReview();
+  @UseGuards(AuthGuard())
+  getOwnReview(@GetUser('_id') id: Types.ObjectId) {
+    return this.reviewsService.getOwnReview(id);
   }
 
   @Post('/own')
-  postOwnRewiew() {
-    return this.reviewsService.postOwnRewiew();
+  @UseGuards(AuthGuard())
+  postOwnRewiew(
+    @GetUser('_id') id: Types.ObjectId,
+    @Body(ValidationPipe) body: CreateReviewDto,
+  ) {
+    return this.reviewsService.postOwnRewiew(id, body);
   }
 
   @Patch('/own')
-  patchOwnRewiew() {
-    return this.reviewsService.patchOwnRewiew();
+  @UseGuards(AuthGuard())
+  patchOwnRewiew(
+    @GetUser('id') id: Types.ObjectId,
+    @Body() body: UpdateReviewDto,
+  ) {
+    return this.reviewsService.patchOwnRewiew(id, body);
   }
 
   @Delete('/own')
-  deleteOwnRewiew() {
-    return this.reviewsService.deleteOwnRewiew();
+  @UseGuards(AuthGuard())
+  deleteOwnRewiew(@GetUser('_id') id: Types.ObjectId) {
+    return this.reviewsService.deleteOwnRewiew(id);
   }
 }
