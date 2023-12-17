@@ -12,8 +12,12 @@ export class AuthRepository {
     // @InjectModel(User.name) private userModel: Model<User>
   ) {}
 
-  findUser(email: string) {
+  findUserByEmail(email: string) {
     return this.userModel.findOne({ email });
+  }
+
+  findUserByVerificationToken(verificationToken: string) {
+    return this.userModel.findOne({ verificationToken });
   }
 
   findUserById(id: Types.ObjectId) {

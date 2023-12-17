@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { AuthRepository } from './auth.repository';
@@ -14,6 +15,8 @@ import { Types } from 'mongoose';
 import { User } from './schemas/user.schema';
 // import { v2 as cloudinary } from 'cloudinary';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { RenewPasswordDto } from './dtos/renew-password.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
 
@@ -32,7 +35,7 @@ export class AuthService {
       throw new BadRequestException('invalid request body');
     }
 
-    const user: User = await this.authRepository.findUser(email);
+    const user: User = await this.authRepository.findUserByEmail(email);
     if (user) {
       throw new BadRequestException('email in use');
     }
@@ -65,10 +68,15 @@ export class AuthService {
 
   async loginUser(body: LoginUserDto) {
     const { email, password } = body;
-    const user = await this.authRepository.findUser(email);
+    const user = await this.authRepository.findUserByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('Email or password is wrong');
+    }
+
     const passwordCompare = await bcrypt.compare(password, user.password);
 
-    if (!user || !passwordCompare) {
+    if (!passwordCompare) {
       throw new NotFoundException('Email or password is wrong');
     }
 
@@ -129,6 +137,112 @@ export class AuthService {
       status: 200,
       message: 'User updated successfully',
       user,
+    };
+  }
+
+  async verifyEmail(verificationToken: string) {
+    const user =
+      await this.authRepository.findUserByVerificationToken(verificationToken);
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    let { token } = user;
+    const { email, _id } = user;
+
+    try {
+      this.jwtService.verify(token, {
+        secret: process.env.SECRET_KEY,
+      });
+    } catch (error) {
+      const jwtPayload: JwtPayload = { email, id: _id };
+      token = this.jwtService.sign(jwtPayload, {
+        secret: process.env.SECRET_KEY,
+      });
+    }
+
+    await this.authRepository.updateUser(_id, {
+      token,
+      verificationToken: '',
+      verify: true,
+    });
+
+    return {
+      status: 200,
+      message: 'verification successful',
+      email,
+      token,
+      verify: true,
+    };
+  }
+
+  async sendVerifyEmail(user: User) {
+    if (user.verify) {
+      throw new BadRequestException('Verification has already been passed');
+    }
+
+    const verifyEmail = this.emailService.verifyEmail(
+      user.email,
+      user.verificationToken,
+      user.userName,
+    );
+
+    await this.emailService.sendEmail(verifyEmail);
+
+    return {
+      status: 200,
+      message: 'Verification email sent',
+      email: user.email,
+    };
+  }
+
+  async sendRenewPass({ email }: RenewPasswordDto) {
+    const user = await this.authRepository.findUserByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    const password = v4();
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    await this.authRepository.updateUser(user._id, { password: hashPassword });
+
+    const renewEmail = this.emailService.renewPass(
+      email,
+      password,
+      user.userName,
+    );
+
+    await this.emailService.sendEmail(renewEmail);
+
+    return { status: 200, message: 'GeneratePassword email sent', email };
+  }
+
+  async changePassword({ oldPassword, newPassword }: ChangePasswordDto, user) {
+    //type of user extends User???
+    const passCompare = await bcrypt.compare(oldPassword, user.password);
+    if (!passCompare) {
+      throw new UnauthorizedException('wrong password');
+    }
+
+    const password = await bcrypt.hash(newPassword, 10);
+
+    await this.authRepository.updateUser(user._id, { password });
+
+    const renewEmail = this.emailService.renewPass(
+      user.email,
+      newPassword,
+      user.userName,
+    );
+
+    await this.emailService.sendEmail(renewEmail);
+
+    return {
+      status: 200,
+      message: 'Password changed',
+      email: user.email,
     };
   }
 }

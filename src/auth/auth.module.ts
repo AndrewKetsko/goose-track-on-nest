@@ -33,6 +33,13 @@ import { JwtStrategy } from './jwt-strategy';
 })
 export class AuthModule {
   // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(CurrentUserMiddleware).forRoutes('*');
+  //   consumer
+  //     .apply(CurrentUserMiddleware)
+  //     .exclude(
+  //       { path: 'auth/register', method: RequestMethod.POST },
+  //       { path: 'auth/login', method: RequestMethod.POST },
+  //       { path: 'reviews', method: RequestMethod.GET },
+  //     )
+  //     .forRoutes('*');
   // }
 }

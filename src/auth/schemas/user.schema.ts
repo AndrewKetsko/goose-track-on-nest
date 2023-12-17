@@ -5,6 +5,9 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class User {
+  // @//some autogenerate decorator
+  // _id: Types.ObjectId;
+
   @Prop({ required: [true, 'Username is required'] })
   userName: string;
 
