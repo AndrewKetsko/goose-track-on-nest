@@ -3,7 +3,6 @@ import { Model, Types } from 'mongoose';
 import { Review } from './schemas/review.schema';
 import { CreateReviewDto } from './dtos/create-review.dto';
 import { UpdateReviewDto } from './dtos/update-review.dto';
-// import { ReviewModel } from './schemas/review.schema';
 
 @Injectable()
 export class ReviewsRepository {
@@ -13,19 +12,19 @@ export class ReviewsRepository {
     return this.reviewModel.find().populate('owner', 'userName avatarURL -_id');
   }
 
-  getReviewByOwner(owner: Types.ObjectId) {
+  getReviewByOwner(owner: Types.ObjectId): Promise<Review> {
     return this.reviewModel.findOne({ owner });
   }
 
-  createReview(owner: Types.ObjectId, body: CreateReviewDto) {
+  createReview(owner: Types.ObjectId, body: CreateReviewDto): Promise<Review> {
     return this.reviewModel.create({ owner, ...body });
   }
 
-  updateReview(owner: Types.ObjectId, body: UpdateReviewDto) {
+  updateReview(owner: Types.ObjectId, body: UpdateReviewDto): Promise<Review> {
     return this.reviewModel.findOneAndUpdate({ owner }, body, { new: true });
   }
 
-  deleteReview(owner: Types.ObjectId) {
+  deleteReview(owner: Types.ObjectId): Promise<Review> {
     return this.reviewModel.findOneAndDelete({ owner });
   }
 }

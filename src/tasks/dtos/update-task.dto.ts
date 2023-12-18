@@ -5,7 +5,7 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { IsGreaterThan } from './create-task.dto';
+import { IsGreaterThan } from './is-greater-then-validator';
 
 export class UpdateTaskDto {
   @IsString()

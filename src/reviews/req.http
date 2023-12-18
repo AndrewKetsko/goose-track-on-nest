@@ -1,3 +1,0 @@
-###get all reviews
-
-GET http://localhost:5000/reviews

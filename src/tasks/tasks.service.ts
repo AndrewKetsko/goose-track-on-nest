@@ -9,12 +9,16 @@ import { TasksRepository } from './tasks.repository';
 import { Types } from 'mongoose';
 import { CreateTaskDto } from './dtos/create-task.dto';
 import { UpdateTaskDto } from './dtos/update-task.dto';
+import { Task } from './schemas/task.schema';
 
 @Injectable()
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
-  async getOwnTasks(id: Types.ObjectId, month: string) {
+  async getOwnTasks(
+    id: Types.ObjectId,
+    month: string,
+  ): Promise<{ status: number; data: Task[] }> {
     if (!month.match(/^20\d\d-(0[1-9]|1[012])$/)) {
       throw new BadRequestException('query param month do not match');
     }
@@ -24,7 +28,10 @@ export class TasksService {
     return { status: 200, data: result };
   }
 
-  async postOwnTask(id: Types.ObjectId, body: CreateTaskDto) {
+  async postOwnTask(
+    id: Types.ObjectId,
+    body: CreateTaskDto,
+  ): Promise<{ status: number; data: Task }> {
     const { priority = 'LOW', category = 'TODO', start, end } = body;
 
     const [startHour, startMin] = start.split(':');
@@ -51,7 +58,7 @@ export class TasksService {
     userId: Types.ObjectId,
     taskId: Types.ObjectId,
     body: UpdateTaskDto,
-  ) {
+  ): Promise<{ status: number; data: Task }> {
     const task = await this.tasksRepository.findTaskById(taskId);
 
     if (task.owner._id.toString() !== userId.toString()) {
@@ -84,7 +91,10 @@ export class TasksService {
     return { status: 200, data: updatedTask };
   }
 
-  async deleteOwnTask(userId: Types.ObjectId, taskId: Types.ObjectId) {
+  async deleteOwnTask(
+    userId: Types.ObjectId,
+    taskId: Types.ObjectId,
+  ): Promise<{ status: number; data: Task }> {
     const task = await this.tasksRepository.findTaskById(taskId);
 
     if (task.owner._id.toString() !== userId.toString()) {

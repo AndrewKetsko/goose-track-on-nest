@@ -29,7 +29,6 @@ export class Task {
 
   @Prop({
     default: 'LOW',
-    // required: [true, 'Priority is required'],
     enum: ['LOW', 'MEDIUM', 'HIGH'],
   })
   priority: string;
@@ -45,7 +44,6 @@ export class Task {
 
   @Prop({
     default: 'TODO',
-    // required: [true, 'Category is required'],
     enum: ['TODO', 'INPROGRESS', 'DONE'],
   })
   category: string;

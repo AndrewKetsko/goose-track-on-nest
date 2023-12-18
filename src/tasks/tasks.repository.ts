@@ -11,7 +11,7 @@ export class TasksRepository {
     private taskModel: Model<Task>,
   ) {}
 
-  findTasksByMonth(id: Types.ObjectId, month: string) {
+  findTasksByMonth(id: Types.ObjectId, month: string): Promise<Task[]> {
     return this.taskModel.find(
       {
         owner: id,
@@ -21,19 +21,20 @@ export class TasksRepository {
     );
   }
 
-  findTaskById(id: Types.ObjectId) {
+  findTaskById(id: Types.ObjectId): Promise<Task> {
     return this.taskModel.findById(id);
   }
 
-  createTask(owner: Types.ObjectId, body: CreateTaskDto) {
+  createTask(owner: Types.ObjectId, body: CreateTaskDto): Promise<Task> {
     return this.taskModel.create({ owner, ...body });
   }
 
-  updateTask(id: Types.ObjectId, body: UpdateTaskDto) {
+  updateTask(id: Types.ObjectId, body: UpdateTaskDto): Promise<Task> {
     return this.taskModel.findByIdAndUpdate(id, body, { new: true });
   }
 
-  deleteTask(id: Types.ObjectId) {
+  deleteTask(id: Types.ObjectId): Promise<any> {
+    //Promise<Task> didnt work ???
     return this.taskModel.findByIdAndDelete(id);
   }
 }

@@ -11,12 +11,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { AuthService } from './auth.service';
+import { AuthService, EmailResponse, UserResponse } from './auth.service';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { User } from './schemas/user.schema';
 import { Types } from 'mongoose';
-// import { AuthGuard } from 'src/guards/auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -28,24 +27,29 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/register')
-  registerUser(@Body(ValidationPipe) body: CreateUserDto) {
+  registerUser(
+    @Body(ValidationPipe) body: CreateUserDto,
+  ): Promise<UserResponse> {
     return this.authService.registerUser(body);
   }
 
   @Post('/login')
-  loginUser(@Body(ValidationPipe) body: LoginUserDto) {
+  loginUser(@Body(ValidationPipe) body: LoginUserDto): Promise<UserResponse> {
     return this.authService.loginUser(body);
   }
 
   @Post('/logout')
   @UseGuards(AuthGuard())
-  logOutUser(@GetUser('_id') id: Types.ObjectId) {
+  logOutUser(
+    @GetUser('_id') id: Types.ObjectId,
+  ): Promise<Partial<UserResponse>> {
     return this.authService.logOutUser(id);
   }
 
   @Get('/current')
   @UseGuards(AuthGuard())
   getCurrentUser(@GetUser() user: User) {
+    //: Promise<UserResponse> didnt work !!!!!?????
     return this.authService.getCurrentUser(user);
   }
 
@@ -56,23 +60,27 @@ export class AuthController {
     @GetUser('_id') id: Types.ObjectId,
     @Body(ValidationPipe) body: UpdateUserDto,
     @UploadedFile() file: Express.Multer.File, //need to find & paste URL to avatar !!!
-  ) {
+  ): Promise<Partial<UserResponse>> {
     return this.authService.updateUser(id, body, file);
   }
 
   @Get('/verify/:verificationToken')
-  verifyEmail(@Param('verificationToken') verificationToken: string) {
+  verifyEmail(
+    @Param('verificationToken') verificationToken: string,
+  ): Promise<EmailResponse> {
     return this.authService.verifyEmail(verificationToken);
   }
 
   @Get('/sendVerifyEmail')
   @UseGuards(AuthGuard())
-  sendVerifyEmail(@GetUser() user: User) {
+  sendVerifyEmail(@GetUser() user: User): Promise<Partial<EmailResponse>> {
     return this.authService.sendVerifyEmail(user);
   }
 
   @Post('/sendRenewPass')
-  sendRenewPass(@Body(ValidationPipe) body: RenewPasswordDto) {
+  sendRenewPass(
+    @Body(ValidationPipe) body: RenewPasswordDto,
+  ): Promise<Partial<EmailResponse>> {
     return this.authService.sendRenewPass(body);
   }
 
@@ -81,7 +89,7 @@ export class AuthController {
   changePassword(
     @Body(ValidationPipe) body: ChangePasswordDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<Partial<EmailResponse>> {
     return this.authService.changePassword(body, user);
   }
 }

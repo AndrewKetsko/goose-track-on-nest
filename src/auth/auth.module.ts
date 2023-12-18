@@ -8,7 +8,6 @@ import { EmailService } from './email.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt-strategy';
-// import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
 
 @Module({
   imports: [
@@ -31,15 +30,4 @@ import { JwtStrategy } from './jwt-strategy';
   ],
   exports: [JwtStrategy, PassportModule, AuthRepository],
 })
-export class AuthModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer
-  //     .apply(CurrentUserMiddleware)
-  //     .exclude(
-  //       { path: 'auth/register', method: RequestMethod.POST },
-  //       { path: 'auth/login', method: RequestMethod.POST },
-  //       { path: 'reviews', method: RequestMethod.GET },
-  //     )
-  //     .forRoutes('*');
-  // }
-}
+export class AuthModule {}

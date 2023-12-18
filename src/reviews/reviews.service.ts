@@ -13,11 +13,14 @@ import { UpdateReviewDto } from './dtos/update-review.dto';
 export class ReviewsService {
   constructor(private reviewsRepository: ReviewsRepository) {}
 
-  getAllReviews(): Promise<Review[]> {
-    return this.reviewsRepository.getAllReviews();
+  async getAllReviews(): Promise<{ status: number; data: Review[] }> {
+    const result = await this.reviewsRepository.getAllReviews();
+    return { status: 200, data: result };
   }
 
-  async getOwnReview(id: Types.ObjectId) {
+  async getOwnReview(
+    id: Types.ObjectId,
+  ): Promise<{ status: number; data: Review }> {
     const review = await this.reviewsRepository.getReviewByOwner(id);
 
     if (!review) {
@@ -29,7 +32,10 @@ export class ReviewsService {
     return { status: 200, data: review };
   }
 
-  async postOwnRewiew(id: Types.ObjectId, body: CreateReviewDto) {
+  async postOwnRewiew(
+    id: Types.ObjectId,
+    body: CreateReviewDto,
+  ): Promise<{ status: number; data: Review }> {
     let review = await this.reviewsRepository.getReviewByOwner(id);
 
     if (review) {
@@ -43,7 +49,10 @@ export class ReviewsService {
     return { status: 201, data: review };
   }
 
-  async patchOwnRewiew(id: Types.ObjectId, body: UpdateReviewDto) {
+  async patchOwnRewiew(
+    id: Types.ObjectId,
+    body: UpdateReviewDto,
+  ): Promise<{ status: number; data: Review }> {
     let review = await this.reviewsRepository.getReviewByOwner(id);
 
     if (!review) {
@@ -61,7 +70,9 @@ export class ReviewsService {
     return { status: 200, data: review };
   }
 
-  async deleteOwnRewiew(id: Types.ObjectId) {
+  async deleteOwnRewiew(
+    id: Types.ObjectId,
+  ): Promise<{ status: number; data: Review }> {
     const review = await this.reviewsRepository.deleteReview(id);
 
     if (!review) {

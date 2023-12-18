@@ -13,12 +13,26 @@ import { JwtPayload } from './interfaces/jwt-payload-interface';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { Types } from 'mongoose';
 import { User } from './schemas/user.schema';
-// import { v2 as cloudinary } from 'cloudinary';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { RenewPasswordDto } from './dtos/renew-password.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
+
+export interface UserResponse {
+  status: number;
+  message: string;
+  token: string;
+  user: User;
+}
+
+export interface EmailResponse {
+  status: number;
+  message: string;
+  email: string;
+  token: string;
+  verify: boolean;
+}
 
 @Injectable()
 export class AuthService {
@@ -28,7 +42,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async registerUser(body: CreateUserDto) {
+  async registerUser(body: CreateUserDto): Promise<UserResponse> {
     const { email, password, userName } = body;
 
     if (!email || !password || !userName) {
@@ -61,12 +75,11 @@ export class AuthService {
 
     newUser.password = undefined;
     newUser.token = undefined;
-    // newUser._id = undefined;
 
     return { status: 201, message: 'success', user: newUser, token };
   }
 
-  async loginUser(body: LoginUserDto) {
+  async loginUser(body: LoginUserDto): Promise<UserResponse> {
     const { email, password } = body;
     const user = await this.authRepository.findUserByEmail(email);
 
@@ -92,33 +105,28 @@ export class AuthService {
     const token = user.token;
     user.password = undefined;
     user.token = undefined;
-    // user._id = undefined;
 
     return { status: 200, message: 'success', user, token };
   }
 
-  async logOutUser(id: Types.ObjectId) {
+  async logOutUser(id: Types.ObjectId): Promise<Partial<UserResponse>> {
     await this.authRepository.updateUserToken(id, '');
     return { status: 204, message: 'no content' };
   }
 
   getCurrentUser(user: User) {
+    //: Promise<UserResponse> didnt work !!!!!?????
     const token = user.token;
     user.token = undefined;
     user.password = undefined;
-    return {
-      status: 200,
-      message: 'success',
-      token,
-      user,
-    };
+    return { status: 200, message: 'success', user, token };
   }
 
   async updateUser(
     id: Types.ObjectId,
     body: UpdateUserDto,
     file: Express.Multer.File,
-  ) {
+  ): Promise<Partial<UserResponse>> {
     const userToUpdate: Partial<User> = { ...body };
 
     if (body.email) {
@@ -140,7 +148,7 @@ export class AuthService {
     };
   }
 
-  async verifyEmail(verificationToken: string) {
+  async verifyEmail(verificationToken: string): Promise<EmailResponse> {
     const user =
       await this.authRepository.findUserByVerificationToken(verificationToken);
 
@@ -177,7 +185,7 @@ export class AuthService {
     };
   }
 
-  async sendVerifyEmail(user: User) {
+  async sendVerifyEmail(user: User): Promise<Partial<EmailResponse>> {
     if (user.verify) {
       throw new BadRequestException('Verification has already been passed');
     }
@@ -197,7 +205,9 @@ export class AuthService {
     };
   }
 
-  async sendRenewPass({ email }: RenewPasswordDto) {
+  async sendRenewPass({
+    email,
+  }: RenewPasswordDto): Promise<Partial<EmailResponse>> {
     const user = await this.authRepository.findUserByEmail(email);
 
     if (!user) {
@@ -220,8 +230,10 @@ export class AuthService {
     return { status: 200, message: 'GeneratePassword email sent', email };
   }
 
-  async changePassword({ oldPassword, newPassword }: ChangePasswordDto, user) {
-    //type of user extends User???
+  async changePassword(
+    { oldPassword, newPassword }: ChangePasswordDto,
+    user: User,
+  ): Promise<Partial<EmailResponse>> {
     const passCompare = await bcrypt.compare(oldPassword, user.password);
     if (!passCompare) {
       throw new UnauthorizedException('wrong password');

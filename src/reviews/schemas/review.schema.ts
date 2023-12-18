@@ -1,25 +1,3 @@
-// import { Schema, model } from 'mongoose';
-
-// export const ReviewSchema = new Schema(
-//   {
-//     review: { type: String, require: [true, 'Review text is required'] },
-//     rating: {
-//       type: Number,
-//       require: [true, 'NO rating, NO review'],
-//       enum: [1, 2, 3, 4, 5],
-//     },
-//     owner: {
-//       type: Schema.Types.ObjectId,
-//       ref: 'user',
-//     },
-//   },
-//   { versionKey: false },
-// );
-
-// export const ReviewModel = model('review', ReviewSchema);
-
-//----------------------------------------------------------
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { User } from '../../auth/schemas/user.schema';
